@@ -1,0 +1,151 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(340px, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 7vw, 7rem);
+  padding: clamp(2rem, 7vw, 6rem);
+  background:
+    radial-gradient(circle at 15% 15%, rgba(76, 116, 94, 0.18), transparent 34%),
+    #f4f6f4;
+}
+
+.login-brand {
+  max-width: 480px;
+  justify-self: end;
+  color: #193b2b;
+}
+
+.brand-mark {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2rem;
+  border-radius: 22px;
+  color: #fff;
+  background: #24553d;
+
+  mat-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 38px;
+  }
+}
+
+.brand-eyebrow {
+  margin: 0 0 0.5rem;
+  color: #557364;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.login-brand h1 {
+  margin: 0;
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+
+.brand-description {
+  max-width: 340px;
+  margin-top: 1rem;
+  color: #52665a;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.login-card {
+  width: min(100%, 440px);
+  justify-self: start;
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(28, 53, 39, 0.1);
+
+  mat-card-header {
+    margin-bottom: 1.5rem;
+  }
+
+  mat-card-title {
+    color: #193b2b;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  mat-card-subtitle {
+    margin-top: 0.4rem;
+  }
+
+  mat-card-footer {
+    display: block;
+    padding: 1rem 1rem 0;
+    color: #718077;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+}
+
+.full-width,
+.submit-button {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-bottom: 0.65rem;
+}
+
+mat-icon[matPrefix] {
+  margin-right: 0.6rem;
+  color: #668070;
+}
+
+.submit-button {
+  min-height: 48px;
+  margin-top: 0.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+
+  mat-spinner {
+    display: inline-block;
+    margin-right: 0.65rem;
+  }
+}
+
+.login-error {
+  margin: 0 0 1rem;
+  color: #b3261e;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 760px) {
+  .login-page {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 2rem;
+    padding: 2rem 1.25rem;
+  }
+
+  .login-brand,
+  .login-card {
+    justify-self: center;
+  }
+
+  .login-brand {
+    text-align: center;
+  }
+
+  .brand-mark {
+    margin: 0 auto 1rem;
+  }
+
+  .brand-description {
+    margin: 0.75rem auto 0;
+  }
+}

@@ -1,0 +1,95 @@
+<div class="dashboard-shell">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" opened class="sidenav">
+      <a class="brand" routerLink="/" aria-label="Ir para o início">
+        <span class="brand-icon"><mat-icon>church</mat-icon></span>
+        <span>
+          <strong>SAAC</strong>
+          <small>Secretaria</small>
+        </span>
+      </a>
+
+      <div class="user-summary" *ngIf="usuario() as user">
+        <div class="avatar">{{ (user.nome || user.email).charAt(0).toUpperCase() }}</div>
+        <div class="user-details">
+          <strong>{{ user.nome || 'Usuário' }}</strong>
+          <span>{{ user.email }}</span>
+        </div>
+      </div>
+
+      <mat-nav-list class="navigation">
+        <a
+          mat-list-item
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Visão geral</span>
+        </a>
+      </mat-nav-list>
+
+      <div class="sidenav-bottom">
+        <button mat-button class="logout-button" type="button" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Sair</span>
+        </button>
+      </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-content">
+      <header class="page-header">
+        <div>
+          <span class="eyebrow">Painel administrativo</span>
+          <h1>Secretaria</h1>
+        </div>
+        <div class="header-user" *ngIf="usuario() as user">
+          <mat-icon>account_circle</mat-icon>
+          <span>{{ user.nome || user.email }}</span>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <section class="welcome-panel">
+          <div>
+            <p class="eyebrow">Bem-vindo(a)</p>
+            <h2>{{ usuario()?.nome || 'à Secretaria' }}</h2>
+            <p>Acesse os módulos disponíveis para sua conta.</p>
+          </div>
+          <div class="welcome-icon">
+            <mat-icon>admin_panel_settings</mat-icon>
+          </div>
+        </section>
+
+        <section class="modules-section" aria-labelledby="modules-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="modules-title">Módulos disponíveis</h2>
+              <p>O acesso é exibido de acordo com as permissões da sua conta.</p>
+            </div>
+          </div>
+
+          <div class="module-grid" *ngIf="modulosDisponiveis().length; else noModules">
+            <article class="module-card" *ngFor="let modulo of modulosDisponiveis()">
+              <div class="module-icon">
+                <mat-icon>{{ modulo.icone }}</mat-icon>
+              </div>
+              <h3>{{ modulo.nome }}</h3>
+              <p>{{ modulo.descricao }}</p>
+              <span class="module-status">Acesso autorizado</span>
+            </article>
+          </div>
+
+          <ng-template #noModules>
+            <div class="empty-state">
+              <mat-icon>lock</mat-icon>
+              <h3>Nenhum módulo disponível</h3>
+              <p>Seu usuário ainda não possui permissões de leitura para os módulos da Secretaria.</p>
+            </div>
+          </ng-template>
+        </section>
+
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
