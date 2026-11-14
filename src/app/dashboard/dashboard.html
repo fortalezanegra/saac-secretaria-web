@@ -26,6 +26,38 @@
           <mat-icon matListItemIcon>dashboard</mat-icon>
           <span matListItemTitle>Visão geral</span>
         </a>
+
+        <ng-template #renderMenu let-items>
+          <ng-container *ngFor="let item of items">
+            <a
+              *ngIf="item.rota; else menuGroup"
+              mat-list-item
+              [routerLink]="item.rota"
+              routerLinkActive="active">
+              <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+              <span matListItemTitle>{{ item.label }}</span>
+            </a>
+
+            <ng-template #menuGroup>
+              <div class="menu-group">
+                <div class="menu-group-title">
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                  <span>{{ item.label }}</span>
+                </div>
+
+                <ng-container *ngIf="item.filhos?.length">
+                  <ng-container
+                    *ngTemplateOutlet="renderMenu; context: { $implicit: item.filhos }">
+                  </ng-container>
+                </ng-container>
+              </div>
+            </ng-template>
+          </ng-container>
+        </ng-template>
+
+        <ng-container
+          *ngTemplateOutlet="renderMenu; context: { $implicit: menuItems }">
+        </ng-container>
       </mat-nav-list>
 
       <div class="sidenav-bottom">
@@ -49,45 +81,6 @@
       </header>
 
       <main class="dashboard-content">
-        <section class="welcome-panel">
-          <div>
-            <p class="eyebrow">Bem-vindo(a)</p>
-            <h2>{{ usuario()?.nome || 'à Secretaria' }}</h2>
-            <p>Acesse os módulos disponíveis para sua conta.</p>
-          </div>
-          <div class="welcome-icon">
-            <mat-icon>admin_panel_settings</mat-icon>
-          </div>
-        </section>
-
-        <section class="modules-section" aria-labelledby="modules-title">
-          <div class="section-heading">
-            <div>
-              <h2 id="modules-title">Módulos disponíveis</h2>
-              <p>O acesso é exibido de acordo com as permissões da sua conta.</p>
-            </div>
-          </div>
-
-          <div class="module-grid" *ngIf="modulosDisponiveis().length; else noModules">
-            <article class="module-card" *ngFor="let modulo of modulosDisponiveis()">
-              <div class="module-icon">
-                <mat-icon>{{ modulo.icone }}</mat-icon>
-              </div>
-              <h3>{{ modulo.nome }}</h3>
-              <p>{{ modulo.descricao }}</p>
-              <span class="module-status">Acesso autorizado</span>
-            </article>
-          </div>
-
-          <ng-template #noModules>
-            <div class="empty-state">
-              <mat-icon>lock</mat-icon>
-              <h3>Nenhum módulo disponível</h3>
-              <p>Seu usuário ainda não possui permissões de leitura para os módulos da Secretaria.</p>
-            </div>
-          </ng-template>
-        </section>
-
         <router-outlet></router-outlet>
       </main>
     </mat-sidenav-content>

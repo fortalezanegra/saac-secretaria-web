@@ -9,19 +9,17 @@ export const routes: Routes = [
   },
   {
     path: '',
+    pathMatch: 'full',
     loadComponent: () =>
       import('./dashboard/dashboard').then(m => m.Dashboard),
-    canActivate: [authGuard],
-    children: [
-      // Adicione aqui as rotas filhas do dashboard.
-      // Exemplo:
-      // {
-      //   path: 'reunioes-ministeriais',
-      //   loadComponent: () =>
-      //     import('./reuniao-ministerial/reuniao-ministerial')
-      //       .then(m => m.ReuniaoMinisterial)
-      // }
-    ]
+    canActivate: [authGuard]
+  },
+  {
+    path: 'secretaria/reunioes-ministeriais/cadastro',
+    loadComponent: () =>
+      import('./secretaria/reuniao-ministerial/cadastro-reuniao-ministerial/cadastro-reuniao-ministerial')
+        .then(m => m.CadastroReuniaoMinisterial),
+    canActivate: [authGuard]
   },
   {
     path: '**',

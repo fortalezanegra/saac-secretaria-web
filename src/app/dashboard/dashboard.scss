@@ -115,6 +115,24 @@
   }
 }
 
+.menu-group-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 48px;
+  padding: 0 16px;
+  color: #52665a;
+  font-size: 14px;
+
+  mat-icon {
+    color: #75847a;
+  }
+}
+
+.menu-group .menu-group-title {
+  padding-left: 24px;
+}
+
 .sidenav-bottom {
   padding: 0.5rem 0.25rem 0;
 }
