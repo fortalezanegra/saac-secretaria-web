@@ -5,8 +5,8 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
+
 import { ReuniaoMinisterialService } from '../../../core/services/reuniao-ministerial.service';
-import {ReuniaoMinisterial } from '../../../core/models/reuniao-ministerial';
 import { ReuniaoMinisterialRequest } from '../../../core/models/reuniao-ministerial-request';
 import { TipoReuniao } from '../../../core/models/tipo-reuniao';
 import { SituacaoReuniaoMinisterial } from '../../../core/models/situacao-reuniao-ministerial';
@@ -30,11 +30,10 @@ export class CadastroReuniaoMinisterial implements OnInit {
     { valor: 'EXTRAORDINARIA', descricao: 'Extraordinária' }
   ];
 
-  reunioes: ReuniaoMinisterial[] = [];
   congregacoes: Congregacao[] = [];
   situacoes: SituacaoReuniaoMinisterial[] = [];
-  reuniaoEmEdicao: number | null = null;
-  carregando = false;
+
+  carregandoOpcoes = false;
   salvando = false;
   erro: string | null = null;
   mensagem: string | null = null;
@@ -47,42 +46,41 @@ export class CadastroReuniaoMinisterial implements OnInit {
   });
 
   ngOnInit(): void {
-    this.carregarReunioes();
     this.carregarOpcoesDropdown();
   }
 
   carregarOpcoesDropdown(): void {
+    this.carregandoOpcoes = true;
+    this.erro = null;
+
+    let respostasRecebidas = 0;
+    const concluirCarregamento = (): void => {
+      respostasRecebidas += 1;
+
+      if (respostasRecebidas === 2) {
+        this.carregandoOpcoes = false;
+      }
+    };
+
     this.service.listarCongregacoesDropdown().subscribe({
       next: congregacoes => {
         this.congregacoes = congregacoes;
+        concluirCarregamento();
       },
       error: () => {
         this.erro = 'Não foi possível carregar as congregações.';
+        concluirCarregamento();
       }
     });
 
     this.service.listarSituacoesDropdown().subscribe({
       next: situacoes => {
         this.situacoes = situacoes;
+        concluirCarregamento();
       },
       error: () => {
         this.erro = 'Não foi possível carregar as situações.';
-      }
-    });
-  }
-
-  carregarReunioes(): void {
-    this.carregando = true;
-    this.erro = null;
-
-    this.service.listar().subscribe({
-      next: reunioes => {
-        this.reunioes = reunioes;
-        this.carregando = false;
-      },
-      error: () => {
-        this.erro = 'Não foi possível carregar as reuniões ministeriais.';
-        this.carregando = false;
+        concluirCarregamento();
       }
     });
   }
@@ -94,84 +92,30 @@ export class CadastroReuniaoMinisterial implements OnInit {
     }
 
     const dados = this.formulario.getRawValue() as ReuniaoMinisterialRequest;
-    const id = this.reuniaoEmEdicao;
 
     this.salvando = true;
     this.erro = null;
     this.mensagem = null;
 
-    const operacao = id === null
-      ? this.service.criar(dados)
-      : this.service.atualizar(id, dados);
-
-    operacao.subscribe({
+    this.service.criar(dados).subscribe({
       next: () => {
-        this.mensagem = id === null
-          ? 'Reunião cadastrada com sucesso.'
-          : 'Reunião atualizada com sucesso.';
+        this.mensagem = 'Reunião cadastrada com sucesso.';
         this.limparFormulario();
-        this.carregarReunioes();
         this.salvando = false;
       },
       error: () => {
-        this.erro = 'Não foi possível salvar a reunião.';
+        this.erro = 'Não foi possível cadastrar a reunião.';
         this.salvando = false;
-      }
-    });
-  }
-
-  editar(reuniao: ReuniaoMinisterial): void {
-    this.reuniaoEmEdicao = reuniao.reuniaoMinisterialId;
-    this.formulario.setValue({
-      tipoReuniao: reuniao.tipoReuniao,
-      congregacaoId: reuniao.congregacaoId,
-      dataReuniao: reuniao.dataReuniao.slice(0, 10),
-      situacaoId: reuniao.situacaoId
-    });
-
-    this.mensagem = null;
-    this.erro = null;
-  }
-
-  excluir(reuniao: ReuniaoMinisterial): void {
-    const confirmado = window.confirm(
-      `Deseja excluir a reunião ${reuniao.reuniaoMinisterialId}?`
-    );
-
-    if (!confirmado) {
-      return;
-    }
-
-    this.erro = null;
-    this.mensagem = null;
-
-    this.service.excluir(reuniao.reuniaoMinisterialId).subscribe({
-      next: () => {
-        this.mensagem = 'Reunião excluída com sucesso.';
-
-        if (this.reuniaoEmEdicao === reuniao.reuniaoMinisterialId) {
-          this.limparFormulario();
-        }
-
-        this.carregarReunioes();
-      },
-      error: () => {
-        this.erro = 'Não foi possível excluir a reunião.';
       }
     });
   }
 
   limparFormulario(): void {
-    this.reuniaoEmEdicao = null;
     this.formulario.reset({
       tipoReuniao: 'PASTORES',
       congregacaoId: 0,
       dataReuniao: '',
       situacaoId: 0
     });
-  }
-
-  descricaoTipo(tipo: TipoReuniao): string {
-    return this.tiposReuniao.find(item => item.valor === tipo)?.descricao ?? tipo;
   }
 }

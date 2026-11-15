@@ -1,0 +1,229 @@
+:host {
+  display: block;
+}
+
+.pagina {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  color: #20332f;
+}
+
+.cabecalho,
+.filtros,
+.paginacao,
+.controles-paginacao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cabecalho h1 {
+  margin: 0.25rem 0 0.5rem;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.sobre-titulo {
+  margin: 0;
+  color: #176b5b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.descricao,
+.estado {
+  margin: 0;
+  color: #667085;
+}
+
+.cartao {
+  padding: 1.25rem;
+  border: 1px solid #e4e7ec;
+  border-radius: 0.875rem;
+  background: #fff;
+  box-shadow: 0 4px 14px rgb(16 24 40 / 5%);
+}
+
+.cartao h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.2rem;
+}
+
+.campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.filtros {
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+.campo-pesquisa {
+  flex: 1;
+}
+
+.campo-tamanho {
+  width: 180px;
+}
+
+label {
+  display: grid;
+  gap: 0.45rem;
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+input,
+select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d0d5dd;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #101828;
+  font: inherit;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid #78c5b3;
+  border-color: #176b5b;
+}
+
+.acoes-formulario,
+.acoes-tabela {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.acoes-formulario {
+  margin-top: 1.15rem;
+}
+
+.botao {
+  min-height: 2.4rem;
+  padding: 0.55rem 0.85rem;
+  border: 0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.botao:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.primario {
+  background: #176b5b;
+  color: #fff;
+}
+
+.secundario {
+  border: 1px solid #d0d5dd;
+  background: #fff;
+  color: #344054;
+}
+
+.perigo {
+  background: #fff1f0;
+  color: #b42318;
+}
+
+.pequeno {
+  min-height: 2rem;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.85rem;
+}
+
+.aviso {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.sucesso {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.erro {
+  background: #fef3f2;
+  color: #b42318;
+}
+
+.tabela-rolagem {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 0.8rem 0.7rem;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.paginacao {
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  color: #667085;
+  font-size: 0.9rem;
+}
+
+.controles-paginacao {
+  justify-content: flex-end;
+}
+
+@media (max-width: 700px) {
+  .pagina {
+    padding: 1rem;
+  }
+
+  .cabecalho,
+  .filtros,
+  .paginacao {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .campos {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-tamanho {
+    width: 100%;
+  }
+
+  .controles-paginacao {
+    justify-content: space-between;
+  }
+
+  th,
+  td {
+    padding: 0.65rem 0.5rem;
+  }
+}

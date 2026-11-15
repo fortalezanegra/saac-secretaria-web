@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { environment } from '../../../environments/environment';
 import { ReuniaoMinisterial } from '../models/reuniao-ministerial';
 import { ReuniaoMinisterialRequest } from '../models/reuniao-ministerial-request';
@@ -10,10 +11,13 @@ import { SituacaoReuniaoMinisterial } from '../models/situacao-reuniao-ministeri
 @Injectable({ providedIn: 'root' })
 export class ReuniaoMinisterialService {
   private readonly http = inject(HttpClient);
+
   private readonly baseUrl =
     `${environment.apis.secretaria}/reuniao-ministerial`;
+
   private readonly congregacaoDropdownUrl =
     `${environment.apis.secretaria}/congregacao/dropdown`;
+
   private readonly situacaoDropdownUrl =
     `${this.baseUrl}/dropdown/situacao`;
 
@@ -44,6 +48,12 @@ export class ReuniaoMinisterialService {
   }
 
   excluir(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
-  }
+  return this.http.put<void>(`${this.baseUrl}/delete`, {
+    reuniaoMinisterialId: id
+  });
+}
+
+
+
+
 }

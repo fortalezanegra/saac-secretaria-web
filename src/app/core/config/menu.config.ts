@@ -7,15 +7,19 @@ export interface MenuItem {
 }
 
 export const MENU_ITEMS: MenuItem[] = [
-
   {
     label: 'Secretaria',
     icon: 'event_note',
     filhos: [
       {
-        label: 'Cadastro de Reunião Ministerial',
-        icon: 'event',
+        label: 'Cadastrar reunião ministerial',
+        icon: 'add_circle',
         rota: '/secretaria/reunioes-ministeriais/cadastro'
+      },
+      {
+        label: 'Consultar reuniões ministeriais',
+        icon: 'search',
+        rota: '/secretaria/reunioes-ministeriais/consulta'
       }
     ]
   }

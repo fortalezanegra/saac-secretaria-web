@@ -1,14 +1,24 @@
 <main class="pagina">
   <header class="cabecalho">
-    <div>
-      <p class="sobre-titulo">SECRETARIA</p>
-      <h1>Reuniões ministeriais</h1>
-      <p class="descricao">Cadastre, consulte e atualize reuniões ministeriais.</p>
-    </div>
+    <p class="sobre-titulo">SECRETARIA</p>
+    <h1>Cadastrar reunião ministerial</h1>
+    <p class="descricao">Preencha os dados para registrar uma nova reunião.</p>
   </header>
 
+  @if (mensagem) {
+    <p class="aviso sucesso" role="status">{{ mensagem }}</p>
+  }
+
+  @if (erro) {
+    <p class="aviso erro" role="alert">{{ erro }}</p>
+  }
+
   <section class="cartao">
-    <h2>{{ reuniaoEmEdicao === null ? 'Nova reunião' : 'Editar reunião' }}</h2>
+    <h2>Dados da reunião</h2>
+
+    @if (carregandoOpcoes) {
+      <p class="estado">Carregando congregações e situações…</p>
+    }
 
     <form [formGroup]="formulario" (ngSubmit)="salvar()">
       <div class="campos">
@@ -55,86 +65,18 @@
         <button
           class="botao primario"
           type="submit"
-          [disabled]="salvando">
-          {{ salvando ? 'Salvando…' : reuniaoEmEdicao === null ? 'Cadastrar' : 'Salvar alterações' }}
+          [disabled]="salvando || carregandoOpcoes">
+          {{ salvando ? 'Cadastrando…' : 'Cadastrar reunião' }}
         </button>
 
-        @if (reuniaoEmEdicao !== null) {
-          <button
-            class="botao secundario"
-            type="button"
-            (click)="limparFormulario()">
-            Cancelar edição
-          </button>
-        }
+        <button
+          class="botao secundario"
+          type="button"
+          (click)="limparFormulario()"
+          [disabled]="salvando">
+          Limpar
+        </button>
       </div>
     </form>
-  </section>
-
-  @if (mensagem) {
-    <p class="aviso sucesso" role="status">{{ mensagem }}</p>
-  }
-
-  @if (erro) {
-    <p class="aviso erro" role="alert">{{ erro }}</p>
-  }
-
-  <section class="cartao">
-    <div class="titulo-lista">
-      <h2>Reuniões cadastradas</h2>
-      <button
-        class="botao secundario"
-        type="button"
-        (click)="carregarReunioes()"
-        [disabled]="carregando">
-        {{ carregando ? 'Atualizando…' : 'Atualizar' }}
-      </button>
-    </div>
-
-    @if (carregando && reunioes.length === 0) {
-      <p class="estado">Carregando reuniões…</p>
-    } @else if (reunioes.length === 0) {
-      <p class="estado">Nenhuma reunião ministerial encontrada.</p>
-    } @else {
-      <div class="tabela-rolagem">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tipo</th>
-              <th>Congregação</th>
-              <th>Data</th>
-              <th>Situação</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (reuniao of reunioes; track reuniao.reuniaoMinisterialId) {
-              <tr>
-                <td>{{ reuniao.reuniaoMinisterialId }}</td>
-                <td>{{ descricaoTipo(reuniao.tipoReuniao) }}</td>
-                <td>{{ reuniao.congregacaoId }}</td>
-                <td>{{ reuniao.dataReuniao | date:'dd/MM/yyyy' }}</td>
-                <td>{{ reuniao.situacaoId }}</td>
-                <td class="acoes-tabela">
-                  <button
-                    class="botao pequeno secundario"
-                    type="button"
-                    (click)="editar(reuniao)">
-                    Editar
-                  </button>
-                  <button
-                    class="botao pequeno perigo"
-                    type="button"
-                    (click)="excluir(reuniao)">
-                    Excluir
-                  </button>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    }
   </section>
 </main>

@@ -1,0 +1,190 @@
+<main class="pagina">
+  <header class="cabecalho">
+    <div>
+      <p class="sobre-titulo">SECRETARIA</p>
+      <h1>Consultar reuniões ministeriais</h1>
+      <p class="descricao">Pesquise, edite ou exclua reuniões cadastradas.</p>
+    </div>
+
+    <button
+      class="botao secundario"
+      type="button"
+      (click)="carregarReunioes()"
+      [disabled]="carregando">
+      {{ carregando ? 'Atualizando…' : 'Atualizar lista' }}
+    </button>
+  </header>
+
+  @if (mensagem) {
+    <p class="aviso sucesso" role="status">{{ mensagem }}</p>
+  }
+
+  @if (erro) {
+    <p class="aviso erro" role="alert">{{ erro }}</p>
+  }
+
+  @if (reuniaoEmEdicao !== null) {
+    <section class="cartao">
+      <h2>Editar reunião</h2>
+
+      <form [formGroup]="formulario" (ngSubmit)="salvarAlteracoes()">
+        <div class="campos">
+          <label>
+            Tipo de reunião
+            <select formControlName="tipoReuniao">
+              @for (tipo of tiposReuniao; track tipo.valor) {
+                <option [value]="tipo.valor">{{ tipo.descricao }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Congregação
+            <select formControlName="congregacaoId">
+              <option [ngValue]="0" disabled>Selecione uma congregação</option>
+              @for (congregacao of congregacoes; track congregacao.congregacaoId) {
+                <option [ngValue]="congregacao.congregacaoId">
+                  {{ congregacao.nome }}
+                </option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Data da reunião
+            <input type="date" formControlName="dataReuniao">
+          </label>
+
+          <label>
+            Situação
+            <select formControlName="situacaoId">
+              <option [ngValue]="0" disabled>Selecione uma situação</option>
+              @for (situacao of situacoes; track situacao.situacaoId) {
+                <option [ngValue]="situacao.situacaoId">
+                  {{ situacao.descricao }}
+                </option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <div class="acoes-formulario">
+          <button class="botao primario" type="submit" [disabled]="salvando">
+            {{ salvando ? 'Salvando…' : 'Salvar alterações' }}
+          </button>
+
+          <button
+            class="botao secundario"
+            type="button"
+            (click)="limparFormulario()"
+            [disabled]="salvando">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+  }
+
+  <section class="cartao">
+    <div class="filtros">
+      <label class="campo-pesquisa">
+        Pesquisar
+        <input
+          type="search"
+          [(ngModel)]="termoPesquisa"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="aoAlterarPesquisa()"
+          placeholder="ID, tipo, congregação, situação ou data">
+      </label>
+
+      <label class="campo-tamanho">
+        Itens por página
+        <select
+          [ngModel]="itensPorPagina"
+          [ngModelOptions]="{ standalone: true }"
+          (ngModelChange)="alterarItensPorPagina($event)">
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="25">25</option>
+          <option [ngValue]="50">50</option>
+        </select>
+      </label>
+    </div>
+
+    @if (carregando && reunioes.length === 0) {
+      <p class="estado">Carregando reuniões…</p>
+    } @else if (reunioesFiltradas.length === 0) {
+      <p class="estado">
+        {{ termoPesquisa ? 'Nenhuma reunião corresponde à pesquisa.' : 'Nenhuma reunião ministerial encontrada.' }}
+      </p>
+    } @else {
+      <div class="tabela-rolagem">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Congregação</th>
+              <th>Data</th>
+              <th>Situação</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (reuniao of reunioesDaPagina; track reuniao.reuniaoMinisterialId) {
+              <tr>
+                <td>{{ reuniao.reuniaoMinisterialId }}</td>
+                <td>{{ descricaoTipo(reuniao.tipoReuniao) }}</td>
+                <td>{{ nomeCongregacao(reuniao.congregacaoId) }}</td>
+                <td>{{ reuniao.dataReuniao | date:'dd/MM/yyyy' }}</td>
+                <td>{{ descricaoSituacao(reuniao.situacaoId) }}</td>
+                <td class="acoes-tabela">
+                  <button
+                    class="botao pequeno secundario"
+                    type="button"
+                    (click)="editar(reuniao)">
+                    Editar
+                  </button>
+
+                  <button
+                    class="botao pequeno perigo"
+                    type="button"
+                    (click)="excluir(reuniao)"
+                    [disabled]="excluindoId === reuniao.reuniaoMinisterialId">
+                    {{ excluindoId === reuniao.reuniaoMinisterialId ? 'Excluindo…' : 'Excluir' }}
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="paginacao">
+        <span>
+          Exibindo {{ primeiroItemExibido }}–{{ ultimoItemExibido }}
+          de {{ reunioesFiltradas.length }} reunião(ões)
+        </span>
+
+        <div class="controles-paginacao">
+          <button
+            class="botao secundario"
+            type="button"
+            (click)="paginaAnterior()"
+            [disabled]="paginaAtual <= 1">
+            Anterior
+          </button>
+
+          <span>Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+
+          <button
+            class="botao secundario"
+            type="button"
+            (click)="proximaPagina()"
+            [disabled]="paginaAtual >= totalPaginas">
+            Próxima
+          </button>
+        </div>
+      </footer>
+    }
+  </section>
+</main>

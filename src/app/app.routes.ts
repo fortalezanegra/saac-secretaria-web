@@ -14,6 +14,7 @@ export const routes: Routes = [
       import('./dashboard/dashboard').then(m => m.Dashboard),
     canActivate: [authGuard]
   },
+
   {
     path: 'secretaria/reunioes-ministeriais/cadastro',
     loadComponent: () =>
@@ -21,6 +22,18 @@ export const routes: Routes = [
         .then(m => m.CadastroReuniaoMinisterial),
     canActivate: [authGuard]
   },
+
+  {
+    path: 'secretaria/reunioes-ministeriais/consulta',
+    loadComponent: () =>
+      import('./secretaria/reuniao-ministerial/consulta-reuniao-ministerial/consulta-reuniao-ministerial')
+        .then(m => m.ConsultaReuniaoMinisterial),
+    canActivate: [authGuard]
+  },
+
+
+
+
   {
     path: '**',
     redirectTo: 'login'
