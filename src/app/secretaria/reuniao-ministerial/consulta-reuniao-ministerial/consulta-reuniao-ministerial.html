@@ -94,7 +94,8 @@
           [(ngModel)]="termoPesquisa"
           [ngModelOptions]="{ standalone: true }"
           (ngModelChange)="aoAlterarPesquisa()"
-          placeholder="ID, tipo, congregação, situação ou data">
+          placeholder="ID, tipo, congregação, situação ou data"
+          aria-label="Pesquisar reuniões ministeriais">
       </label>
 
       <label class="campo-tamanho">
@@ -102,7 +103,7 @@
         <select
           [ngModel]="itensPorPagina"
           [ngModelOptions]="{ standalone: true }"
-          (ngModelChange)="alterarItensPorPagina($event)">
+          (ngModelChange)="alterarItensPorPagina($event.toString())">
           <option [ngValue]="10">10</option>
           <option [ngValue]="25">25</option>
           <option [ngValue]="50">50</option>
@@ -134,9 +135,9 @@
               <tr>
                 <td>{{ reuniao.reuniaoMinisterialId }}</td>
                 <td>{{ descricaoTipo(reuniao.tipoReuniao) }}</td>
-                <td>{{ nomeCongregacao(reuniao.congregacaoId) }}</td>
+                <td>{{ reuniao.congregacao || nomeCongregacao(reuniao.congregacaoId) }}</td>
                 <td>{{ reuniao.dataReuniao | date:'dd/MM/yyyy' }}</td>
-                <td>{{ descricaoSituacao(reuniao.situacaoId) }}</td>
+                <td>{{ reuniao.situacao || descricaoSituacao(reuniao.situacaoId) }}</td>
                 <td class="acoes-tabela">
                   <button
                     class="botao pequeno secundario"

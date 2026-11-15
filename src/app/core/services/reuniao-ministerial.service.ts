@@ -15,6 +15,9 @@ export class ReuniaoMinisterialService {
   private readonly baseUrl =
     `${environment.apis.secretaria}/reuniao-ministerial`;
 
+  private readonly reunioesUrl =
+    'http://10.0.0.76:8081/api/reuniao-ministerial';
+
   private readonly congregacaoDropdownUrl =
     `${environment.apis.secretaria}/congregacao/dropdown`;
 
@@ -30,7 +33,8 @@ export class ReuniaoMinisterialService {
   }
 
   listar(): Observable<ReuniaoMinisterial[]> {
-    return this.http.get<ReuniaoMinisterial[]>(this.baseUrl);
+    const url = `${this.reunioesUrl}?_refresh=${Date.now()}`;
+    return this.http.get<ReuniaoMinisterial[]>(url);
   }
 
   criar(dados: ReuniaoMinisterialRequest): Observable<ReuniaoMinisterial> {
@@ -48,12 +52,9 @@ export class ReuniaoMinisterialService {
   }
 
   excluir(id: number): Observable<void> {
-  return this.http.put<void>(`${this.baseUrl}/delete`, {
-    reuniaoMinisterialId: id
-  });
-}
-
-
-
+    return this.http.put<void>(`${this.baseUrl}/delete`, {
+      reuniaoMinisterialId: id
+    });
+  }
 
 }

@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
-import { FormsModule, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 
 import { ReuniaoMinisterialService } from '../../../core/services/reuniao-ministerial.service';
 import { ReuniaoMinisterial } from '../../../core/models/reuniao-ministerial';
@@ -19,6 +24,7 @@ import { TipoReuniao } from '../../../core/models/tipo-reuniao';
 export class ConsultaReuniaoMinisterial implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(ReuniaoMinisterialService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly tiposReuniao: { valor: TipoReuniao; descricao: string }[] = [
     { valor: 'PASTORES', descricao: 'Pastores' },
@@ -49,12 +55,6 @@ export class ConsultaReuniaoMinisterial implements OnInit {
     situacaoId: [0, [Validators.required, Validators.min(1)]]
   });
 
-  ngOnInit(): void {
-    this.carregarReunioes();
-    this.carregarCongregacoes();
-    this.carregarSituacoes();
-  }
-
   get reunioesFiltradas(): ReuniaoMinisterial[] {
     const termo = this.termoPesquisa.trim().toLocaleLowerCase('pt-BR');
 
@@ -66,12 +66,10 @@ export class ConsultaReuniaoMinisterial implements OnInit {
       const textoPesquisa = [
         reuniao.reuniaoMinisterialId,
         this.descricaoTipo(reuniao.tipoReuniao),
-        this.nomeCongregacao(reuniao.congregacaoId),
-        this.descricaoSituacao(reuniao.situacaoId),
+        reuniao.congregacao ?? this.nomeCongregacao(reuniao.congregacaoId),
+        reuniao.situacao ?? this.descricaoSituacao(reuniao.situacaoId),
         reuniao.dataReuniao
-      ]
-        .join(' ')
-        .toLocaleLowerCase('pt-BR');
+      ].join(' ').toLocaleLowerCase('pt-BR');
 
       return textoPesquisa.includes(termo);
     });
@@ -102,19 +100,27 @@ export class ConsultaReuniaoMinisterial implements OnInit {
     );
   }
 
+  ngOnInit(): void {
+    this.carregarReunioes();
+    this.carregarCongregacoes();
+    this.carregarSituacoes();
+  }
+
   carregarReunioes(): void {
     this.carregando = true;
     this.erro = null;
 
     this.service.listar().subscribe({
       next: reunioes => {
-        this.reunioes = reunioes;
+        this.reunioes = [...reunioes];
         this.paginaAtual = Math.min(this.paginaAtual, this.totalPaginas);
         this.carregando = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.erro = 'Não foi possível carregar as reuniões ministeriais.';
         this.carregando = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -145,9 +151,13 @@ export class ConsultaReuniaoMinisterial implements OnInit {
     this.paginaAtual = 1;
   }
 
-  alterarItensPorPagina(valor: string): void {
-    this.itensPorPagina = Number(valor);
-    this.paginaAtual = 1;
+  alterarItensPorPagina(valor: number | string): void {
+    const quantidade = Number(valor);
+
+    if ([10, 25, 50].includes(quantidade)) {
+      this.itensPorPagina = quantidade;
+      this.paginaAtual = 1;
+    }
   }
 
   paginaAnterior(): void {
@@ -177,11 +187,7 @@ export class ConsultaReuniaoMinisterial implements OnInit {
   }
 
   salvarAlteracoes(): void {
-    if (
-      this.formulario.invalid ||
-      this.salvando ||
-      this.reuniaoEmEdicao === null
-    ) {
+    if (this.formulario.invalid || this.salvando || this.reuniaoEmEdicao === null) {
       this.formulario.markAllAsTouched();
       return;
     }
@@ -219,23 +225,26 @@ export class ConsultaReuniaoMinisterial implements OnInit {
     this.erro = null;
     this.mensagem = null;
     this.excluindoId = reuniao.reuniaoMinisterialId;
+this.cdr.markForCheck();
 
-    this.service.excluir(reuniao.reuniaoMinisterialId).subscribe({
-      next: () => {
-        this.mensagem = 'Reunião excluída com sucesso.';
+this.service.excluir(reuniao.reuniaoMinisterialId).subscribe({
+  next: () => {
+    this.mensagem = 'Reunião excluída com sucesso.';
 
-        if (this.reuniaoEmEdicao === reuniao.reuniaoMinisterialId) {
-          this.limparFormulario();
-        }
+    if (this.reuniaoEmEdicao === reuniao.reuniaoMinisterialId) {
+      this.limparFormulario();
+    }
 
-        this.excluindoId = null;
-        this.carregarReunioes();
-      },
-      error: () => {
-        this.erro = 'Não foi possível excluir a reunião.';
-        this.excluindoId = null;
-      }
-    });
+    this.excluindoId = null;
+    this.cdr.markForCheck();
+    this.carregarReunioes();
+  },
+  error: () => {
+    this.erro = 'Não foi possível excluir a reunião.';
+    this.excluindoId = null;
+    this.cdr.markForCheck();
+  }
+});
   }
 
   limparFormulario(): void {

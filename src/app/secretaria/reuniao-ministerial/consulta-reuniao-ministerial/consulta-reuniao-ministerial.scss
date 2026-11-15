@@ -8,49 +8,52 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 1.5rem;
-  color: #20332f;
+  color: #172033;
 }
 
-.cabecalho,
-.filtros,
-.paginacao,
-.controles-paginacao {
+.cabecalho {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.cabecalho h1 {
-  margin: 0.25rem 0 0.5rem;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-}
-
 .sobre-titulo {
-  margin: 0;
-  color: #176b5b;
+  margin: 0 0 0.35rem;
+  color: #53627b;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
 }
 
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0.4rem;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+h2 {
+  margin-bottom: 1rem;
+  font-size: 1.15rem;
+}
+
 .descricao,
 .estado {
-  margin: 0;
-  color: #667085;
+  margin-bottom: 0;
+  color: #64748b;
 }
 
 .cartao {
   padding: 1.25rem;
-  border: 1px solid #e4e7ec;
-  border-radius: 0.875rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.85rem;
   background: #fff;
-  box-shadow: 0 4px 14px rgb(16 24 40 / 5%);
-}
-
-.cartao h2 {
-  margin: 0 0 1.25rem;
-  font-size: 1.2rem;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 5%);
 }
 
 .campos {
@@ -60,49 +63,45 @@
 }
 
 .filtros {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px;
   align-items: end;
-  margin-bottom: 1rem;
-}
-
-.campo-pesquisa {
-  flex: 1;
-}
-
-.campo-tamanho {
-  width: 180px;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 label {
   display: grid;
   gap: 0.45rem;
-  color: #344054;
+  color: #334155;
   font-size: 0.9rem;
   font-weight: 600;
 }
 
 input,
 select {
-  box-sizing: border-box;
   width: 100%;
-  min-height: 2.7rem;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #d0d5dd;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #cbd5e1;
   border-radius: 0.5rem;
   background: #fff;
-  color: #101828;
+  color: #172033;
   font: inherit;
 }
 
 input:focus,
 select:focus {
-  outline: 2px solid #78c5b3;
-  border-color: #176b5b;
+  border-color: #2563eb;
+  outline: 3px solid rgb(37 99 235 / 15%);
 }
 
 .acoes-formulario,
-.acoes-tabela {
+.acoes-tabela,
+.controles-paginacao {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -111,38 +110,38 @@ select:focus {
 }
 
 .botao {
-  min-height: 2.4rem;
-  padding: 0.55rem 0.85rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.9rem;
   border: 0;
   border-radius: 0.5rem;
   cursor: pointer;
   font: inherit;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .botao:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .primario {
-  background: #176b5b;
+  background: #1d4ed8;
   color: #fff;
 }
 
 .secundario {
-  border: 1px solid #d0d5dd;
+  border: 1px solid #cbd5e1;
   background: #fff;
-  color: #344054;
+  color: #334155;
 }
 
 .perigo {
-  background: #fff1f0;
-  color: #b42318;
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 .pequeno {
-  min-height: 2rem;
+  min-height: 2.1rem;
   padding: 0.4rem 0.65rem;
   font-size: 0.85rem;
 }
@@ -150,17 +149,17 @@ select:focus {
 .aviso {
   margin: 0;
   padding: 0.8rem 1rem;
-  border-radius: 0.5rem;
+  border-radius: 0.6rem;
 }
 
 .sucesso {
-  background: #ecfdf3;
-  color: #027a48;
+  background: #dcfce7;
+  color: #166534;
 }
 
 .erro {
-  background: #fef3f2;
-  color: #b42318;
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .tabela-rolagem {
@@ -177,20 +176,24 @@ th,
 td {
   padding: 0.8rem 0.7rem;
   border-bottom: 1px solid #e2e8f0;
-  white-space: nowrap;
+  vertical-align: middle;
 }
 
 th {
   background: #f8fafc;
   color: #475569;
   font-size: 0.8rem;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
 .paginacao {
-  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   margin-top: 1rem;
-  color: #667085;
+  color: #64748b;
   font-size: 0.9rem;
 }
 
@@ -203,23 +206,23 @@ th {
     padding: 1rem;
   }
 
-  .cabecalho,
-  .filtros,
-  .paginacao {
-    align-items: stretch;
+  .cabecalho {
+    align-items: flex-start;
     flex-direction: column;
   }
 
-  .campos {
+  .campos,
+  .filtros {
     grid-template-columns: 1fr;
   }
 
-  .campo-tamanho {
-    width: 100%;
+  .paginacao {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .controles-paginacao {
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   th,

@@ -1,7 +1,12 @@
 <div class="dashboard-shell">
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav mode="side" opened class="sidenav">
-      <a class="brand" routerLink="/" aria-label="Ir para o início">
+      <a
+        class="brand"
+        href="/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Abrir o início em uma nova aba">
         <span class="brand-icon"><mat-icon>church</mat-icon></span>
         <span>
           <strong>SAAC</strong>
@@ -20,9 +25,9 @@
       <mat-nav-list class="navigation">
         <a
           mat-list-item
-          routerLink="/"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }">
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer">
           <mat-icon matListItemIcon>dashboard</mat-icon>
           <span matListItemTitle>Visão geral</span>
         </a>
@@ -32,8 +37,9 @@
             <a
               *ngIf="item.rota; else menuGroup"
               mat-list-item
-              [routerLink]="item.rota"
-              routerLinkActive="active">
+              [href]="item.rota"
+              target="_blank"
+              rel="noopener noreferrer">
               <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
               <span matListItemTitle>{{ item.label }}</span>
             </a>
@@ -74,6 +80,7 @@
           <span class="eyebrow">Painel administrativo</span>
           <h1>Secretaria</h1>
         </div>
+
         <div class="header-user" *ngIf="usuario() as user">
           <mat-icon>account_circle</mat-icon>
           <span>{{ user.nome || user.email }}</span>
